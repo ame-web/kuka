@@ -1,0 +1,6 @@
+{
+  "name": "KUKA HOME Premium Furniture",
+  "description": "Premium multi-lingual catalog website for KUKA HOME, featuring high-end couches, beds, dining sets, functional recliners, showrooms directions and live chat assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
