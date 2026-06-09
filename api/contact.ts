@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
     try {
       const plainPhone = phone.replace(/\D/g, '');
-      const text = `📝 *New Contact Form Submission (Vercel)*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Message:*\n${message}\n\n[Message on Telegram](https://t.me/+${plainPhone})`;
+      const text = `🌟 *Новая заявка с сайта KUKA HOME*\n\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n💬 *Сообщение:*\n_${message}_\n\n👉 [Написать в Telegram](https://t.me/+${plainPhone})`;
       
       const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',

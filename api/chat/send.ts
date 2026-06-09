@@ -12,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
     try {
-      const tgMsg = `👤 User-${String(sessionId).slice(0, 4)} (${String(language).toUpperCase()})\nSession: ${sessionId}\n\n${text}\n\n⚠️ (Sent via Vercel Serverless. To reply, an external Database like Redis is required.)`;
+      const tgMsg = `🤖 *Чат-бот KUKA HOME*\n\n👤 *User-*${String(sessionId).slice(0, 4)} (${String(language).toUpperCase()})\n💬 *Сообщение:*\n_${text}_`;
       
       const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
@@ -20,6 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: JSON.stringify({
           chat_id: TELEGRAM_CHAT_ID,
           text: tgMsg,
+          parse_mode: 'Markdown'
         })
       });
 
