@@ -123,77 +123,114 @@ export default function ChatWidget({ language, isOpen, onClose, onOpen, onProduc
     };
   }, [isOpen, onClose]);
 
-  const generateSmartAutoReply = (userInput: string): string => {
+  const generateSmartAutoReply = (userInput: string): { text: string; productPreview?: any } => {
     const q = userInput.toLowerCase();
     
+    let productPreview: { id: string; image: string; price: number; model: string; } | undefined;
+    if (q.includes('736') || q.includes('milanese')) {
+      productPreview = { id: 'BY-736B', image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80", price: 4100, model: "BY.736B Milanese" };
+    } else if (q.includes('6033') || q.includes('legenda')) {
+      productPreview = { id: 'BY-6033', image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80", price: 3450, model: "BY.6033 Legenda" };
+    } else if (q.includes('700') || q.includes('gravity')) {
+      productPreview = { id: 'BY-700', image: "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=1200&q=80", price: 2100, model: "BY.700 Smart Gravity" };
+    } else if (q.includes('8105') || q.includes('sienna')) {
+      productPreview = { id: 'BY-8105', image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1200&q=80", price: 2900, model: "BY.8105 Sienna Crown" };
+    } else if (q.includes('5020') || q.includes('verona')) {
+      productPreview = { id: 'BY-5020', image: "https://images.unsplash.com/photo-1621293954908-907159247fc8?auto=format&fit=crop&w=1200&q=80", price: 3200, model: "BY.5020 Verona Cloud" };
+    } else if (q.includes('4042') || q.includes('capital')) {
+      productPreview = { id: 'BY-4042', image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=1200&q=80", price: 1850, model: "BY.4042 Capital Table" };
+    } else if (q.includes('1022') || q.includes('shell')) {
+      productPreview = { id: 'BY-1022', image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=80", price: 850, model: "BY.1022 Shell Lounge" };
+    }
+
     if (language === 'uz') {
       if (q.includes('manzil') || q.includes('showroom') || q.includes('salon') || q.includes('adres') || q.includes('yunusobod') || q.includes('labzak') || q.includes('gavxar')) {
-        return "Bizning Toshkentda muhtasham showroomimiz bor:\n1) Gavxar ko'chasi 124/1 (+998 90 984-40-14). Sizni kutib qolamiz!";
+        return { text: "Bizning Toshkentda muhtasham showroomimiz bor:\n1) Gavxar ko'chasi 124/1 (+998 90 984-40-14). Sizni kutib qolamiz!" };
       }
-      if (q.includes('narx') || q.includes('qancha') || q.includes('bahosi') || q.includes('dollar') || q.includes('sofa') || q.includes('divan') || q.includes('nech pul') || q.includes('nechpul')) {
-        return "Premium divan va krovatlarimiz narxi loyiha va olchamiga qarab $1250 dan $4100 gacha hisoblanadi. Payme, Click va bank kartalari orqali to'lovlar qabul qilinadi.";
+      if (productPreview || q.includes('narx') || q.includes('qancha') || q.includes('bahosi') || q.includes('dollar') || q.includes('sofa') || q.includes('divan') || q.includes('nech pul') || q.includes('nechpul')) {
+        let text = "Premium divan va krovatlarimiz narxi loyiha va olchamiga qarab $1250 dan $4100 gacha hisoblanadi. Payme, Click va bank kartalari orqali to'lovlar qabul qilinadi.";
+        if (productPreview) {
+          text = `Ushbu model (${productPreview.model}) narxi va to'lov shartlari bo'yicha menejerimiz tez orada sizga javob yozadi.`;
+        }
+        return { text, productPreview };
       }
       if (q.includes('etkazish') || q.includes('dostavka') || q.includes('yetkazish')) {
-        return "KUKA HOME o'z xaridorlari uchun butun Toshkent bo'ylab elita yetkazib berish va bepul yig'ib berish (assembly) xizmatini mutlaqo bepul taqdim etadi!";
+        return { text: "KUKA HOME o'z xaridorlari uchun butun Toshkent bo'ylab elita yetkazib berish va bepul yig'ib berish (assembly) xizmatini mutlaqo bepul taqdim etadi!" };
       }
       if (q.includes('ish vaqti') || q.includes('soat') || q.includes('vaqt')) {
-        return "Showroomlarimiz har kuni haftada 7 kun davomida soat 09:00 dan 18:00 gacha tanaffussiz xizmak ko'rsatishadi.";
+        return { text: "Showroomlarimiz har kuni haftada 7 kun davomida soat 09:00 dan 18:00 gacha tanaffussiz xizmak ko'rsatishadi." };
       }
-      return "So'rovingiz qabul qilindi. Sizni batafsil ma'lumotlar bilan bog'lash uchun haqiqiy operator konsultantga ulaymi?";
+      return { text: "So'rovingiz qabul qilindi. Sizni batafsil ma'lumotlar bilan bog'lash uchun haqiqiy operator konsultantga ulaymi?" };
     } else if (language === 'kz') {
       if (q.includes('мекенжай') || q.includes('салон') || q.includes('шоурум') || q.includes('жұмыс') || q.includes('юнусабад') || q.includes('гавхар')) {
-        return "Біздің Ташкентте үлкен көрме залымыз (шоурум) жұмыс істейді:\n1) Гавхар көшесі, 124/1 (+998 90 984-40-14). Күтеміз!";
+        return { text: "Біздің Ташкентте үлкен көрме залымыз (шоурум) жұмыс істейді:\n1) Гавхар көшесі, 124/1 (+998 90 984-40-14). Күтеміз!" };
       }
-      if (q.includes('баға') || q.includes('қанша') || q.includes('диван') || q.includes('төсек') || q.includes('құны')) {
-        return "KUKA HOME премиум жиһаздарының бағасы таңдалған модель мен көлемге байланысты $1250-дан $4100-ға дейін болады. Click, Payme және қолма-қол төлемдерді қабылдаймыз.";
+      if (productPreview || q.includes('баға') || q.includes('қанша') || q.includes('диван') || q.includes('төсек') || q.includes('құны')) {
+        let text = "KUKA HOME премиум жиһаздарының бағасы таңдалған модель мен көлемге байланысты $1250-дан $4100-ға дейін болады. Click, Payme және қолма-қол төлемдерді қабылдаймыз.";
+        if (productPreview) {
+          text = `Осы модельдің (${productPreview.model}) бағасы және төлем шарттары бойынша менеджеріміз жақында сізге жауап береді.`;
+        }
+        return { text, productPreview };
       }
       if (q.includes('жеткізу') || q.includes('құрастыру')) {
-        return "KUKA HOME сіздің үйіңізге дейін премиум жеткізуді және Ташкент бойынша жиһазды кәсіби құрастыруды толықтай ТЕГІН жүзеге асырады!";
+        return { text: "KUKA HOME сіздің үйіңізге дейін премиум жеткізуді және Ташкент бойынша жиһазды кәсіби құрастыруды толықтай ТЕГІН жүзеге асырады!" };
       }
       if (q.includes('уақыт') || q.includes('сағат') || q.includes('жұмыс')) {
-        return "Көрме залдарымыз күн сайын сағат 09:00-ден 18:00-ге дейін үзіліссіз ашық.";
+        return { text: "Көрме залдарымыз күн сайын сағат 09:00-ден 18:00-ге дейін үзіліссіз ашық." };
       }
-      return "Сұранысыңыз қабылданды. Сізге жауап беру үшін тікелей кеңесші-операторға қосайын ба?";
+      return { text: "Сұранысыңыз қабылданды. Сізге жауап беру үшін тікелей кеңесші-операторға қосайын ба?" };
     } else if (language === 'zh') {
       if (q.includes('地址') || q.includes('生活馆') || q.includes('展厅') || q.includes('在哪') || q.includes('位置')) {
-        return "我们在塔什干设有旗舰生活馆：\n1) Gavkhar路 124/1 (电话: +998 90 984-40-14). 欢迎您莅临品鉴！";
+        return { text: "我们在塔什干设有旗舰生活馆：\n1) Gavkhar路 124/1 (电话: +998 90 984-40-14). 欢迎您莅临品鉴！" };
       }
-      if (q.includes('价格') || q.includes('多少钱') || q.includes('沙发') || q.includes('床') || q.includes('餐桌')) {
-        return "我们的尊享高定沙发及主卧床具系列价格在 $1250 至 $4100 之间（根据软包布艺或皮质方案定制）。支持当地 Click, Payme 以及国际 Visa 信用卡支付。";
+      if (productPreview || q.includes('价格') || q.includes('多少钱') || q.includes('沙发') || q.includes('床') || q.includes('餐桌')) {
+        let text = "我们的尊享高定沙发及主卧床具系列价格在 $1250 至 $4100 之间（根据软包布艺或皮质方案定制）。支持当地 Click, Payme 以及国际 Visa 信用卡支付。";
+        if (productPreview) {
+          text = `关于该模型（${productPreview.model}）的价格和付款条件，我们的经理将很快回复您。`;
+        }
+        return { text, productPreview };
       }
       if (q.includes('配送') || q.includes('送货') || q.includes('安装')) {
-        return "KUKA HOME 顾家家居专为塔什干尊客提供全城免费高端专车送货及大师级上门整装搭建服务！";
+        return { text: "KUKA HOME 顾家家居专为塔什干尊客提供全城免费高端专车送货及大师级上门整装搭建服务！" };
       }
       if (q.includes('时间') || q.includes('营业') || q.includes('几点')) {
-        return "尊享生活馆营业时间为每日 09:00 - 18:00 (含周末，午间无休)。";
+        return { text: "尊享生活馆营业时间为每日 09:00 - 18:00 (含周末，午间无休)。" };
       }
-      return "已为您登记诉求。是否需要立即为您呼叫展厅首席高定设计师在线接待？";
+      return { text: "已为您登记诉求。是否需要立即为您呼叫展厅首席高定设计师在线接待？" };
     } else if (language === 'ru') {
       if (q.includes('адрес') || q.includes('салон') || q.includes('шоурум') || q.includes('юнусабад') || q.includes('лабзак') || q.includes('гавхар')) {
-        return "В Ташкенте работает наш флагманский автосалон:\n1) улица Гавхар, 124/1, Ташкент (+998 90 984-40-14). Ждем вас в гости!";
+        return { text: "В Ташкенте работает наш флагманский автосалон:\n1) улица Гавхар, 124/1, Ташкент (+998 90 984-40-14). Ждем вас в гости!" };
       }
-      if (q.includes('цена') || q.includes('сколько') || q.includes('диван') || q.includes('кресло') || q.includes('кровать')) {
-        return "Стоимость премиальной мебели KUKA HOME варьируется от $1250 до $4100 в зависимости от модели и комплектации. Есть возможность оплаты через Click, Payme и терминалы.";
+      if (productPreview || q.includes('цена') || q.includes('сколько') || q.includes('диван') || q.includes('кресло') || q.includes('кровать')) {
+        let text = "Стоимость премиальной мебели KUKA HOME варьируется от $1250 до $4100 в зависимости от модели и комплектации. Есть возможность оплаты через Click, Payme и терминалы.";
+        if (productPreview) {
+           text = `Наш менеджер скоро ответит вам по поводу цены на ${productPreview.model} и условий оплаты.`;
+        }
+        return { text, productPreview };
       }
       if (q.includes('доставка') || q.includes('сборка')) {
-        return "Мы предоставляем премиальную доставку до дома и профессиональную сборку мебели в пределах всего Ташкента абсолютно БЕСПЛАТНО!";
+        return { text: "Мы предоставляем премиальную доставку до дома и профессиональную сборку мебели в пределах всего Ташкента абсолютно БЕСПЛАТНО!" };
       }
       if (q.includes('время') || q.includes('работа')) {
-        return "Наши двери открыты ежедневно с 09:00 до 18:00 без обеденных перерывов.";
+        return { text: "Наши двери открыты ежедневно с 09:00 до 18:00 без обеденных перерывов." };
       }
-      return "Ваш запрос понятен. Если хотите, я могу подключить живого дежурного консультанта прямо сейчас?";
+      return { text: "Ваш запрос понятен. Если хотите, я могу подключить живого дежурного консультанта прямо сейчас?" };
     } else {
       // Default English
       if (q.includes('address') || q.includes('location') || q.includes('showroom') || q.includes('where')) {
-        return "We operate a grand gallery in Tashkent:\n1) 124/1 Gavkhar Street, Tashkent (Phone: +998 90 984-40-14). Highly welcome!";
+        return { text: "We operate a grand gallery in Tashkent:\n1) 124/1 Gavkhar Street, Tashkent (Phone: +998 90 984-40-14). Highly welcome!" };
       }
-      if (q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('money')) {
-        return "Our modern luxury couches and masterbeds range from $1250 to $4100. We accept local Click, Payme, and international Visa cards.";
+      if (productPreview || q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('money')) {
+        let text = "Our modern luxury couches and masterbeds range from $1250 to $4100. We accept local Click, Payme, and international Visa cards.";
+        if (productPreview) {
+          text = `Our manager will reply to you soon regarding the price of ${productPreview.model} and payment conditions.`;
+        }
+        return { text, productPreview };
       }
       if (q.includes('delivery') || q.includes('shipping') || q.includes('assemble')) {
-        return "For all Tashkent clients, KUKA HOME provides white-glove home delivery and expert structural assembly completely direct and free of charge!";
+        return { text: "For all Tashkent clients, KUKA HOME provides white-glove home delivery and expert structural assembly completely direct and free of charge!" };
       }
-      return "Thank you for reaching out. Would you like to connect directly to our luxury showroom specialist counselor right now?";
+      return { text: "Thank you for reaching out. Would you like to connect directly to our luxury showroom specialist counselor right now?" };
     }
   };
 
@@ -231,11 +268,12 @@ export default function ChatWidget({ language, isOpen, onClose, onOpen, onProduc
       // Fallback to smart auto-reply if backend offline
       setTimeout(() => {
         setIsTyping(false);
-        const botReplyText = generateSmartAutoReply(userText);
+        const { text: botReplyText, productPreview } = generateSmartAutoReply(userText);
         const botMsg: ChatMessage = {
           id: `msg-reply-${Date.now()}`,
           sender: 'bot',
           text: botReplyText,
+          productPreview,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         setMessages((prev) => [...prev, botMsg]);
