@@ -217,17 +217,17 @@ export default function ChatWidget({ language, isOpen, onClose, onOpen, onProduc
       return { text: "Ваш запрос понятен. Если хотите, я могу подключить живого дежурного консультанта прямо сейчас?" };
     } else {
       // Default English
-      if (q.includes('address') || q.includes('location') || q.includes('showroom') || q.includes('where')) {
+      if (q.includes('address') || q.includes('location') || q.includes('showroom') || q.includes('where') || q.includes('manzil') || q.includes('qayerda') || q.includes('адрес') || q.includes('где')) {
         return { text: "We operate a grand gallery in Tashkent:\n1) 124/1 Gavkhar Street, Tashkent (Phone: +998 90 984-40-14). Highly welcome!" };
       }
-      if (productPreview || q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('money')) {
+      if (productPreview || q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('money') || q.includes('narx') || q.includes('qancha') || q.includes('nechpul') || q.includes('nech pul') || q.includes('pul') || q.includes('цена') || q.includes('сколько')) {
         let text = "Our modern luxury couches and masterbeds range from $1250 to $4100. We accept local Click, Payme, and international Visa cards.";
         if (productPreview) {
           text = `Our manager will reply to you soon regarding the price of ${productPreview.model} and payment conditions.`;
         }
         return { text, productPreview };
       }
-      if (q.includes('delivery') || q.includes('shipping') || q.includes('assemble')) {
+      if (q.includes('delivery') || q.includes('shipping') || q.includes('assemble') || q.includes('dostavka') || q.includes('yetkazish') || q.includes('доставка') || q.includes('сборка')) {
         return { text: "For all Tashkent clients, KUKA HOME provides white-glove home delivery and expert structural assembly completely direct and free of charge!" };
       }
       return { text: "Thank you for reaching out. Would you like to connect directly to our luxury showroom specialist counselor right now?" };
