@@ -20,9 +20,23 @@ interface ChatMessage {
     text: string;
     url: string;
   };
+  productPreview?: {
+    id: string;
+    image: string;
+    price: number;
+    model: string;
+  };
 }
 
-export default function ChatWidget({ language, isOpen, onClose, onOpen }: ChatWidgetProps) {
+interface ChatWidgetProps {
+  language: Language;
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+  onProductClick?: (productId: string) => void;
+}
+
+export default function ChatWidget({ language, isOpen, onClose, onOpen, onProductClick }: ChatWidgetProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -335,6 +349,25 @@ export default function ChatWidget({ language, isOpen, onClose, onOpen }: ChatWi
                       }`}>
                         {/* If formatted multiline text */}
                         <p className="whitespace-pre-line">{m.text}</p>
+                        {m.productPreview && (
+                          <div 
+                            className={`mt-3 bg-white p-2 border border-neutral-100 rounded-lg shadow-sm ${onProductClick ? 'cursor-pointer hover:border-red-200 hover:shadow-md transition-all' : ''}`}
+                            onClick={() => {
+                              if (onProductClick && m.productPreview) {
+                                onProductClick(m.productPreview.id);
+                              }
+                            }}
+                          >
+                            <img 
+                              src={m.productPreview.image} 
+                              alt={m.productPreview.model} 
+                              className="w-full h-32 object-cover rounded-md mb-2" 
+                              referrerPolicy="no-referrer"
+                            />
+                            <div className="text-[11px] font-bold text-neutral-900 mb-0.5">{m.productPreview.model}</div>
+                            <div className="text-[12px] font-mono text-red-600">${m.productPreview.price}</div>
+                          </div>
+                        )}
                         {m.actionButton && (
                           <a 
                             href={m.actionButton.url}

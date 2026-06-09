@@ -11,6 +11,7 @@ import VacancySection from './components/VacancySection';
 import ContactSection from './components/ContactSection';
 import ChatWidget from './components/ChatWidget';
 import { translations } from './translations';
+import { products } from './products';
 import { Check, X, Shield, ShoppingBag, Eye, Heart, Compass, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -21,6 +22,14 @@ export default function App() {
   
   // Custom modal image selector
   const [modalImageIdx, setModalImageIdx] = useState(0);
+
+  const handleProductClick = (productId: string) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      setSelectedProduct(product);
+      setModalImageIdx(0);
+    }
+  };
   
   // Custom fabric selection options
   const [selectedFabric, setSelectedFabric] = useState('Ivory Cream');
@@ -123,6 +132,7 @@ export default function App() {
         isOpen={isChatOpen} 
         onClose={() => setIsChatOpen(false)}
         onOpen={() => setIsChatOpen(true)}
+        onProductClick={handleProductClick}
       />
 
       {/* Luxury Quick View Lightbox Modal */}

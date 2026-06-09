@@ -17,6 +17,11 @@ interface ServerMessage {
     text: string;
     url: string;
   };
+  productPreview?: {
+    image: string;
+    price: number;
+    model: string;
+  };
 }
 
 // In-memory store for sessions and messages mapping
@@ -165,7 +170,24 @@ async function startServer() {
       }
     };
 
-    const isPrice = lowerText.includes("narx") || lowerText.includes("qancha") || lowerText.includes("nech pul") || lowerText.includes("nechpul") || lowerText.includes("how much") || lowerText.includes("price") || lowerText.includes("цена") || lowerText.includes("сколько") || lowerText.includes("баға") || lowerText.includes("多少钱") || lowerText.includes("价格") || lowerText.includes("费用");
+    let productPreview: { id: string; image: string; price: number; model: string; } | undefined;
+    if (lowerText.includes('736') || lowerText.includes('milanese')) {
+      productPreview = { id: 'BY-736B', image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80", price: 4100, model: "BY.736B Milanese" };
+    } else if (lowerText.includes('6033') || lowerText.includes('legenda')) {
+      productPreview = { id: 'BY-6033', image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80", price: 3450, model: "BY.6033 Legenda" };
+    } else if (lowerText.includes('700') || lowerText.includes('gravity')) {
+      productPreview = { id: 'BY-700', image: "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=1200&q=80", price: 2100, model: "BY.700 Smart Gravity" };
+    } else if (lowerText.includes('8105') || lowerText.includes('sienna')) {
+      productPreview = { id: 'BY-8105', image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1200&q=80", price: 2900, model: "BY.8105 Sienna Crown" };
+    } else if (lowerText.includes('5020') || lowerText.includes('verona')) {
+      productPreview = { id: 'BY-5020', image: "https://images.unsplash.com/photo-1621293954908-907159247fc8?auto=format&fit=crop&w=1200&q=80", price: 3200, model: "BY.5020 Verona Cloud" };
+    } else if (lowerText.includes('4042') || lowerText.includes('capital')) {
+      productPreview = { id: 'BY-4042', image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=1200&q=80", price: 1850, model: "BY.4042 Capital Table" };
+    } else if (lowerText.includes('1022') || lowerText.includes('shell')) {
+      productPreview = { id: 'BY-1022', image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=80", price: 850, model: "BY.1022 Shell Lounge" };
+    }
+
+    const isPrice = !!productPreview || lowerText.includes("narx") || lowerText.includes("qancha") || lowerText.includes("nech pul") || lowerText.includes("nechpul") || lowerText.includes("how much") || lowerText.includes("price") || lowerText.includes("цена") || lowerText.includes("сколько") || lowerText.includes("баға") || lowerText.includes("多少钱") || lowerText.includes("价格") || lowerText.includes("费用");
     const isLoc = lowerText.includes("manzil") || lowerText.includes("lokatsiya") || lowerText.includes("qayerda") || lowerText.includes("location") || lowerText.includes("locatsiya") || lowerText.includes("address") || lowerText.includes("адрес") || lowerText.includes("локация") || lowerText.includes("мекенжай") || lowerText.includes("地址") || lowerText.includes("位置");
     const isBrand = lowerText.includes("kuka") || lowerText.includes("brend") || lowerText.includes("qanday mebel") || lowerText.includes("katalog") || lowerText.includes("бренд") || lowerText.includes("каталог") || lowerText.includes("brand") || lowerText.includes("品牌") || lowerText.includes("家具");
 
@@ -174,7 +196,9 @@ async function startServer() {
     let actionButton: { text: string; url: string; } | undefined;
 
     if (isPrice) {
-      autoReply = langReplies.price;
+      autoReply = productPreview 
+        ? `${langReplies.price.replace('Narxlar va to\'lov', 'Ushbu model (' + productPreview.model + ') narxi va to\'lov').replace('цен и условий', 'цены на ' + productPreview.model + ' и условий').replace('prices and', 'the price of ' + productPreview.model + ' and')}`
+        : langReplies.price;
     } else if (isLoc) {
       autoReply = langReplies.location;
       actionButton = {
@@ -193,7 +217,8 @@ async function startServer() {
             sender: 'bot',
             text: autoReply,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            actionButton
+            actionButton,
+            productPreview
           });
         }
       }, 1500); // 1.5 seconds delay for natural feel
