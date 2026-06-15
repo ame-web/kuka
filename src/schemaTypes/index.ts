@@ -4,8 +4,13 @@ export const productSchema = {
   type: 'document',
   fields: [
     {
-      name: 'model',
-      title: 'Model',
+      name: 'title',
+      title: 'Title / Model',
+      type: 'string',
+    },
+    {
+      name: 'sku',
+      title: 'SKU / ID',
       type: 'string',
     },
     {
@@ -31,7 +36,62 @@ export const productSchema = {
       title: 'Dimensions',
       type: 'string',
     },
+    {
+      name: 'images',
+      title: 'Images',
+      type: 'array',
+      of: [{ type: 'image' }],
+    },
+    {
+      name: 'material_en',
+      title: 'Material (EN)',
+      type: 'string',
+    },
+    {
+      name: 'description_en',
+      title: 'Description (EN)',
+      type: 'text',
+    }
   ],
+  preview: {
+    select: {
+      title: 'title',
+      media: 'images.0'
+    }
+  }
 };
 
-export const schemaTypes = [productSchema];
+export const siteSettingsSchema = {
+  name: 'siteSettings',
+  title: 'Site Settings',
+  type: 'document',
+  fields: [
+    {
+      name: 'title',
+      title: 'Site Title',
+      type: 'string',
+    },
+    {
+      name: 'homeHeroTitle',
+      title: 'Home Hero Title',
+      type: 'string',
+    },
+    {
+      name: 'homeHeroSubtitle',
+      title: 'Home Hero Subtitle',
+      type: 'string',
+    },
+    {
+      name: 'homeHeroImage',
+      title: 'Home Banner Image',
+      type: 'image',
+    },
+    {
+      name: 'aboutUsText',
+      title: 'About Us Text',
+      type: 'text',
+    }
+  ]
+};
+
+export const schemaTypes = [productSchema, siteSettingsSchema];
