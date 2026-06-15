@@ -177,18 +177,18 @@ export const products: Product[] = [
     featured: false,
     newArrival: true,
     material: {
-      uz: "Quyma poliuretan karkas, junli aralash trikotaj mato, 360 darajaga aylanuvchi oltin tusli po'lat tayanch",
-      kz: "Құйма полиуретан қаңқа, 360 градусқа айналатын негіз",
-      ru: "Литой полиуретановый ортопедический остов, шерстяная меланжевая обивка, вращающаяся опора 360° под латунь",
+      uz: "Yuqori sifatli mato va guruch po'lat oyoq mexanizmi",
+      kz: "Жоғары сапалы мата және жезді механизм",
+      ru: "Высококачественная ткань и латунный механизм",
       en: "Molded cold-cure foam core, luxury wool blend upholstery fabric, 360° swivel brass-plated steel base",
-      zh: "高密度冷发泡一体铸型棉，特奢羊毛复古混纺大肌理面料，高载荷360°精密回转合金镀铜转底"
+      zh: "模压冷固化海绵内芯，豪华羊毛混纺内饰面料，360°旋转镀黄铜钢底座"
     },
     info: {
-      uz: "Tabiatdagi chig'anoq simmetriyasidan ilhomlangan aylanuvchi lounger. Har qanday xonaga nafis zamonaviylik konturini qo'shib, xoh ish xonasi bo'lsin xoh yashash xonasi - bejirim urg'u beradi.",
-      kz: "Теңіз қабыршағы пішінінен шабыт алған айналмалы кресло. Кез келген бөлменің сәнін ашады.",
-      ru: "Поворотное дизайнерское кресло, вдохновленное природными контурами морской раковины. Станет ярким интерьерным акцентом в гостиной, спальне или современном представительском кабинете.",
+      uz: "Uyning istalgan burchagiga qo'shimcha ko'rk bag'ishlovchi fiksatsiya stuli. Aylanuvchi tizimi tufayli harakat erkinligi cheklanmagan.",
+      kz: "360° айналу және тамаша белдік қолдауды қамтамасыз ететін ерекше орындық.",
+      ru: "Красивый архитектурный элемент, вдохновленный геометрией раковины. Обеспечивает 360° вращение и отличную поясничную поддержку.",
       en: "A beautiful architectural statement piece inspired by the curved geometry of an oceanic shell. Seamlessly balances 360° smooth swivel action with full postural lumbar cradling.",
-      zh: "海洋贝壳律动美学单人休闲转椅。意式写意流线，采用高成本一体冷发泡内模。360°随心稳健回转，让每一个静谧午后与阅读时光都拥有不可替代的尊属浪漫。"
+      zh: "一件美丽的建筑个性单品，灵感来自海洋贝壳的曲面几何排列。无缝平衡了 360°的平滑旋转功能与对全身背部姿势的完美承托。"
     }
   }
 ];

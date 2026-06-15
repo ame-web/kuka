@@ -3,13 +3,7 @@ import { products as fallbackProducts } from './products';
 
 export async function getSanityProducts(): Promise<Product[]> {
   try {
-    const rawResponse = await fetch(`/api/products?t=${Date.now()}`, {
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
-    });
+    const rawResponse = await fetch(`/api/products?t=${Date.now()}`);
     
     if (!rawResponse.ok) {
       throw new Error('Failed to fetch from API');

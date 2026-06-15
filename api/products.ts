@@ -1,17 +1,17 @@
 import { products as fallbackProducts } from '../src/products';
 
 export default async function handler(req: any, res: any) {
-  const projectId = process.env.SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'e6yjw47z';
-  const dataset = process.env.SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+  const projectId = process.env.SANITY_PROJECT_ID || process.env.VITE_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'e6yjw47z';
+  const dataset = process.env.SANITY_DATASET || process.env.VITE_SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 
   try {
-    const rawResponse = await fetch(`https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=*%5B_type%3D%3D%22product%22%5D%7B...%2Cimages%5B%5D-%3E%2Ccategory-%3E%7D`, {
-      cache: 'no-store',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
+    const query = '*[_type=="product"]{...,images[]->,category->}';
+    const baseUrl = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}`;
+    // don't add &t=... because sanity api rejects it with 400 bad request
+    const url = `${baseUrl}?query=${encodeURIComponent(query)}`;
+
+    const rawResponse = await fetch(url, {
+      cache: 'no-store'
     });
     const json = await rawResponse.json();
     const rawProducts = json.result || [];
@@ -50,23 +50,23 @@ export default async function handler(req: any, res: any) {
         model: p.title || p.model || p.name?.uz || p.sku || 'Unknown',
         category: category,
         images: images.length > 0 ? images : fallback?.images || [],
-        dimensions: p.dimensions || fallback?.dimensions || 'Unknown',
-        price: p.price || fallback?.price || 0,
-        featured: p.hero || false,
+        dimensions: p.dimensions ?? fallback?.dimensions ?? 'Unknown',
+        price: p.price ?? fallback?.price ?? 0,
+        featured: p.hero ?? false,
         newArrival: true,
         material: {
-          uz: p.material_uz || fallback?.material?.uz || '',
-          kz: p.material_kz || fallback?.material?.kz || '',
-          ru: p.material_ru || fallback?.material?.ru || '',
-          en: p.material_en || fallback?.material?.en || '',
-          zh: p.material_zh || fallback?.material?.zh || ''
+          uz: p.material_uz ?? fallback?.material?.uz ?? '',
+          kz: p.material_kz ?? fallback?.material?.kz ?? '',
+          ru: p.material_ru ?? fallback?.material?.ru ?? '',
+          en: p.material_en ?? fallback?.material?.en ?? '',
+          zh: p.material_zh ?? fallback?.material?.zh ?? ''
         },
         info: {
-          uz: p.description_uz || fallback?.info?.uz || '',
-          kz: p.description_kz || fallback?.info?.kz || '',
-          ru: p.description_ru || fallback?.info?.ru || '',
-          en: p.description_en || fallback?.info?.en || '',
-          zh: p.description_zh || fallback?.info?.zh || ''
+          uz: p.description_uz ?? fallback?.info?.uz ?? '',
+          kz: p.description_kz ?? fallback?.info?.kz ?? '',
+          ru: p.description_ru ?? fallback?.info?.ru ?? '',
+          en: p.description_en ?? fallback?.info?.en ?? '',
+          zh: p.description_zh ?? fallback?.info?.zh ?? ''
         }
       };
     });
