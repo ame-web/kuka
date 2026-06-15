@@ -48,8 +48,48 @@ export const productSchema = {
       type: 'string',
     },
     {
+      name: 'material_uz',
+      title: 'Material (UZ)',
+      type: 'string',
+    },
+    {
+      name: 'material_ru',
+      title: 'Material (RU)',
+      type: 'string',
+    },
+    {
+      name: 'material_kz',
+      title: 'Material (KZ)',
+      type: 'string',
+    },
+    {
+      name: 'material_zh',
+      title: 'Material (ZH)',
+      type: 'string',
+    },
+    {
       name: 'description_en',
       title: 'Description (EN)',
+      type: 'text',
+    },
+    {
+      name: 'description_uz',
+      title: 'Description (UZ)',
+      type: 'text',
+    },
+    {
+      name: 'description_ru',
+      title: 'Description (RU)',
+      type: 'text',
+    },
+    {
+      name: 'description_kz',
+      title: 'Description (KZ)',
+      type: 'text',
+    },
+    {
+      name: 'description_zh',
+      title: 'Description (ZH)',
       type: 'text',
     }
   ],
