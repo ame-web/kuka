@@ -5,7 +5,14 @@ export default async function handler(req: any, res: any) {
   const dataset = process.env.SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 
   try {
-    const rawResponse = await fetch(`https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=*%5B_type%3D%3D%22product%22%5D%7B...%2Cimages%5B%5D-%3E%2Ccategory-%3E%7D`);
+    const rawResponse = await fetch(`https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=*%5B_type%3D%3D%22product%22%5D%7B...%2Cimages%5B%5D-%3E%2Ccategory-%3E%7D`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
     const json = await rawResponse.json();
     const rawProducts = json.result || [];
     
@@ -64,6 +71,7 @@ export default async function handler(req: any, res: any) {
       };
     });
     
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.status(200).json(mapped);
   } catch (error) {
     console.error('Error fetching products:', error);
