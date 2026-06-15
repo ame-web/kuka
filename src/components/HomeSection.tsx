@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Product, Language, NavTab } from '../types';
-import { products } from '../products';
 import { translations } from '../translations';
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Award, Shield, Truck, Heart, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -11,6 +10,7 @@ interface HomeSectionProps {
   language: Language;
   onSelectProduct: (product: Product) => void;
   setCurrentTab: (tab: NavTab) => void;
+  products: Product[];
 }
 
 const slideImages = [
@@ -67,7 +67,7 @@ const slideImages = [
   }
 ];
 
-export default function HomeSection({ language, onSelectProduct, setCurrentTab }: HomeSectionProps) {
+export default function HomeSection({ language, onSelectProduct, setCurrentTab, products }: HomeSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const t = translations[language];
 

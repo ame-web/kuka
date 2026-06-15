@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Language } from '../types';
+import { Language, Product } from '../types';
 import { translations } from '../translations';
 import { MessageSquare, X, Send, User, ChevronRight, Clock, Star, Heart, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -9,6 +9,8 @@ interface ChatWidgetProps {
   isOpen: boolean;
   onClose: () => void;
   onOpen: () => void;
+  onProductClick?: (id: string) => void;
+  products?: Product[];
 }
 
 interface ChatMessage {
@@ -28,15 +30,7 @@ interface ChatMessage {
   };
 }
 
-interface ChatWidgetProps {
-  language: Language;
-  isOpen: boolean;
-  onClose: () => void;
-  onOpen: () => void;
-  onProductClick?: (productId: string) => void;
-}
-
-export default function ChatWidget({ language, isOpen, onClose, onOpen, onProductClick }: ChatWidgetProps) {
+export default function ChatWidget({ language, isOpen, onClose, onOpen, onProductClick, products }: ChatWidgetProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -127,20 +121,21 @@ export default function ChatWidget({ language, isOpen, onClose, onOpen, onProduc
     const q = userInput.toLowerCase();
     
     let productPreview: { id: string; image: string; price: number; model: string; } | undefined;
-    if (q.includes('736') || q.includes('milanese')) {
-      productPreview = { id: 'BY-736B', image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80", price: 4100, model: "BY.736B Milanese" };
-    } else if (q.includes('6033') || q.includes('legenda')) {
-      productPreview = { id: 'BY-6033', image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80", price: 3450, model: "BY.6033 Legenda" };
-    } else if (q.includes('700') || q.includes('gravity')) {
-      productPreview = { id: 'BY-700', image: "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=1200&q=80", price: 2100, model: "BY.700 Smart Gravity" };
-    } else if (q.includes('8105') || q.includes('sienna')) {
-      productPreview = { id: 'BY-8105', image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1200&q=80", price: 2900, model: "BY.8105 Sienna Crown" };
-    } else if (q.includes('5020') || q.includes('verona')) {
-      productPreview = { id: 'BY-5020', image: "https://images.unsplash.com/photo-1621293954908-907159247fc8?auto=format&fit=crop&w=1200&q=80", price: 3200, model: "BY.5020 Verona Cloud" };
-    } else if (q.includes('4042') || q.includes('capital')) {
-      productPreview = { id: 'BY-4042', image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=1200&q=80", price: 1850, model: "BY.4042 Capital Table" };
-    } else if (q.includes('1022') || q.includes('shell')) {
-      productPreview = { id: 'BY-1022', image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=80", price: 850, model: "BY.1022 Shell Lounge" };
+    
+    if (products) {
+      const match = products.find(p => 
+        q.includes(p.id.toLowerCase().replace('-', '')) || 
+        q.includes(p.id.toLowerCase()) || 
+        p.model.toLowerCase().split(' ').some(word => word.length > 3 && q.includes(word))
+      );
+      if (match) {
+        productPreview = {
+          id: match.id,
+          image: match.images[0] || "",
+          price: match.price || 0,
+          model: match.model
+        };
+      }
     }
 
     if (language === 'uz') {

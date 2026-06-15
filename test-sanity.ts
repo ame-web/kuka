@@ -1,0 +1,1 @@
+fetch('https://g7ambxw5.api.sanity.io/v2022-03-07/data/query/production?query=*%5B_type%3D%3D%22product%22%5D%5B1...2%5D%7B...%7D').then(r=>r.json()).then(r => console.log(JSON.stringify(r, null, 2)));

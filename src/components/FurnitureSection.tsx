@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Product, Language } from '../types';
-import { products } from '../products';
 import { translations } from '../translations';
 import { Search, ChevronDown, Check, SlidersHorizontal, Grid3X3, ArrowUpDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -9,12 +8,13 @@ import { TypewriterText, TypewriterParagraph } from './TypewriterText';
 interface FurnitureSectionProps {
   language: Language;
   onSelectProduct: (product: Product) => void;
+  products: Product[];
 }
 
 type CategoryFilter = 'all' | 'sofa' | 'bed' | 'dining' | 'lounge';
 type SortOption = 'popular' | 'price-asc' | 'price-desc';
 
-export default function FurnitureSection({ language, onSelectProduct }: FurnitureSectionProps) {
+export default function FurnitureSection({ language, onSelectProduct, products }: FurnitureSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('popular');

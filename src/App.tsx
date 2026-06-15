@@ -11,7 +11,8 @@ import VacancySection from './components/VacancySection';
 import ContactSection from './components/ContactSection';
 import ChatWidget from './components/ChatWidget';
 import { translations } from './translations';
-import { products } from './products';
+import { products as fallbackProducts } from './products';
+import { getSanityProducts } from './sanityClient';
 import { Check, X, Shield, ShoppingBag, Eye, Heart, Compass, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -19,12 +20,21 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('home');
   const [language, setLanguage] = useState<Language>('uz');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [activeProducts, setActiveProducts] = useState<Product[]>(fallbackProducts);
   
+  useEffect(() => {
+    getSanityProducts().then(fetchedProducts => {
+      if (fetchedProducts && fetchedProducts.length > 0) {
+        setActiveProducts(fetchedProducts);
+      }
+    });
+  }, []);
+
   // Custom modal image selector
   const [modalImageIdx, setModalImageIdx] = useState(0);
 
   const handleProductClick = (productId: string) => {
-    const product = products.find(p => p.id === productId);
+    const product = activeProducts.find(p => p.id === productId);
     if (product) {
       setSelectedProduct(product);
       setModalImageIdx(0);
@@ -96,6 +106,7 @@ export default function App() {
                 language={language} 
                 onSelectProduct={setSelectedProduct} 
                 setCurrentTab={setCurrentTab}
+                products={activeProducts}
               />
             )}
             {currentTab === 'about' && (
@@ -105,6 +116,7 @@ export default function App() {
               <FurnitureSection 
                 language={language} 
                 onSelectProduct={setSelectedProduct} 
+                products={activeProducts}
               />
             )}
             {currentTab === 'showrooms' && (
@@ -133,6 +145,7 @@ export default function App() {
         onClose={() => setIsChatOpen(false)}
         onOpen={() => setIsChatOpen(true)}
         onProductClick={handleProductClick}
+        products={activeProducts}
       />
 
       {/* Luxury Quick View Lightbox Modal */}

@@ -97,6 +97,8 @@ if (TELEGRAM_BOT_TOKEN) {
   }
 }
 
+import productsHandler from "./api/products";
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -238,6 +240,15 @@ async function startServer() {
     }
 
     res.json({ messages: chats[sessionId] });
+  });
+
+  app.get("/api/products", async (req, res) => {
+    try {
+      await productsHandler(req, res);
+    } catch (error) {
+      console.error("Sanity proxy error:", error);
+      res.status(500).json({ error: "Failed to fetch products" });
+    }
   });
 
   app.post("/api/contact", async (req, res) => {
