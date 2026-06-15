@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import fs from "fs";
-import TelegramBot from "node-telegram-bot-api";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 
@@ -28,74 +27,29 @@ interface ServerMessage {
 const chats: Record<string, ServerMessage[]> = {}; 
 const messageToSession: Record<number, string> = {}; 
 
-let bot: TelegramBot | null = null;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-if (TELEGRAM_BOT_TOKEN) {
+// Minimal Telegram fetch utility
+const sendTelegramMessage = async (chatId: string, text: string, options: any = {}) => {
+  if (!TELEGRAM_BOT_TOKEN) return null;
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
   try {
-    bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
-    console.log("Telegram bot polling started.");
-
-    bot.on("polling_error", (error: any) => {
-      // Ignore 409 Conflict errors gracefully. This happens if AI Studio Dev and Prod are running simultaneously.
-      if (error && error.message && error.message.includes('409 Conflict')) {
-        return; 
-      }
-      console.error("Telegram polling error:", error);
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        ...options
+      }),
     });
-
-    bot.on('message', (msg) => {
-      // If we provided a specific chat id, only allow that admin
-      if (TELEGRAM_CHAT_ID && msg.chat.id.toString() !== TELEGRAM_CHAT_ID) return;
-      
-      // If the admin used "/start", just reply
-      if (msg.text === '/start') {
-        bot?.sendMessage(msg.chat.id, `Welcome Admin! Your chat ID is: ${msg.chat.id}. Set this as TELEGRAM_CHAT_ID in .env`);
-        return;
-      }
-      
-      // Admin must reply to a forwarded message
-      if (!msg.reply_to_message) {
-         if (msg.chat.id.toString() === TELEGRAM_CHAT_ID) {
-           bot?.sendMessage(msg.chat.id, "⚠️ To answer a customer, you MUST use Telegram's 'Reply' feature. Right-click their message (or swipe right on mobile) and select 'Reply', then type your answer.");
-         }
-         return;
-      }
-      
-      let sessionId = messageToSession[msg.reply_to_message.message_id];
-      
-      // Fallback: extract session ID from the message text if memory was cleared
-      if (!sessionId && msg.reply_to_message.text) {
-        const match = msg.reply_to_message.text.match(/Session:\s*([^\n]+)/);
-        if (match && match[1]) {
-          sessionId = match[1].trim();
-        } else if (msg.reply_to_message.text.includes("New Contact Form Submission")) {
-           bot?.sendMessage(msg.chat.id, "⚠️ This is a contact form. The user is not in a live chat session. Please use the Telegram link in the message to contact them directly.");
-           return;
-        }
-      }
-
-      if (sessionId) {
-         if (!chats[sessionId]) chats[sessionId] = [];
-         
-         chats[sessionId].push({
-            id: `agent-reply-${Date.now()}`,
-            sender: 'agent',
-            text: msg.text || '<Unsupported message type>',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-         });
-         
-         // Acknowledge sending
-         bot?.sendMessage(msg.chat.id, `✅ Reply sent successfully!`, { disable_notification: true });
-      } else {
-         bot?.sendMessage(msg.chat.id, `⚠️ Could not find the active session for this message. The chat window might have been closed or the server restarted.`);
-      }
-    });
+    return await res.json();
   } catch (error) {
-    console.error("Failed to initialize Telegram bot:", error);
+    console.error("Telegram send error:", error);
+    return null;
   }
-}
+};
 
 import productsHandler from "./api/products";
 
@@ -125,13 +79,15 @@ async function startServer() {
     chats[sessionId].push(userMsg);
 
     // Forward to Telegram
-    if (bot && TELEGRAM_CHAT_ID) {
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       try {
-        const tgMsg = await bot.sendMessage(
+        const tgRes = await sendTelegramMessage(
           TELEGRAM_CHAT_ID, 
           `👤 User-${sessionId.slice(0, 4)} (${language.toUpperCase()})\nSession: ${sessionId}\n\n${text}`
         );
-        messageToSession[tgMsg.message_id] = sessionId;
+        if (tgRes?.ok) {
+          messageToSession[tgRes.result.message_id] = sessionId;
+        }
       } catch (err) {
         console.error("Telegram error:", err);
       }
@@ -258,11 +214,11 @@ async function startServer() {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    if (bot && TELEGRAM_CHAT_ID) {
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       try {
         const plainPhone = phone.replace(/\D/g, '');
         const text = `📝 *New Contact Form Submission*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Message:*\n${message}\n\n[Message on Telegram](https://t.me/+${plainPhone})`;
-        await bot.sendMessage(TELEGRAM_CHAT_ID, text, { parse_mode: 'Markdown', disable_web_page_preview: true });
+        await sendTelegramMessage(TELEGRAM_CHAT_ID, text, { parse_mode: 'Markdown', disable_web_page_preview: true });
         return res.json({ success: true });
       } catch (err) {
         console.error("Telegram contact form error:", err);
@@ -281,6 +237,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
+    // Production serving
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {

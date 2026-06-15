@@ -15,12 +15,18 @@ import { products as fallbackProducts } from './products';
 import { getSanityProducts } from './sanityClient';
 import { Check, X, Shield, ShoppingBag, Eye, Heart, Compass, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { AdminStudio } from './AdminStudio';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('home');
   const [language, setLanguage] = useState<Language>('uz');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeProducts, setActiveProducts] = useState<Product[]>(fallbackProducts);
+
+  if (window.location.pathname.startsWith('/admin')) {
+    return <AdminStudio />;
+  }
+
   
   useEffect(() => {
     getSanityProducts().then(fetchedProducts => {

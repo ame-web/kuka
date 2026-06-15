@@ -1,8 +1,8 @@
 import { products as fallbackProducts } from '../src/products';
 
 export default async function handler(req: any, res: any) {
-  const projectId = process.env.SANITY_PROJECT_ID || 'e6yjw47z';
-  const dataset = process.env.SANITY_DATASET || 'production';
+  const projectId = process.env.SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'e6yjw47z';
+  const dataset = process.env.SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 
   try {
     const rawResponse = await fetch(`https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=*%5B_type%3D%3D%22product%22%5D%7B...%2Cimages%5B%5D-%3E%2Ccategory-%3E%7D`);

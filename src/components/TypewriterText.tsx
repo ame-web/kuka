@@ -33,7 +33,7 @@ export function TypewriterText({ text, className = "", delay = 0, once = false }
       y: 0,
       transition: {
         duration: 0.25,
-        ease: [0.16, 1, 0.3, 1], // Slick luxury curve
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // Slick luxury curve
       },
     },
   };
@@ -91,7 +91,7 @@ export function TypewriterParagraph({ text, className = "", delay = 0, once = fa
       y: 0,
       transition: {
         duration: 0.4,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       },
     },
   };
