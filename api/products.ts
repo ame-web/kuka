@@ -20,8 +20,8 @@ export default async function handler(req: any, res: any) {
     res.setHeader('Cache-Control', 's-maxage=0, no-cache, no-store, must-revalidate');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.status(200).json(json.result || []);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({ error: 'Failed to fetch products', details: error?.message || String(error) });
   }
 }
