@@ -6,22 +6,15 @@ export async function getSanityProducts(): Promise<Product[]> {
   const dataset = import.meta.env?.VITE_SANITY_DATASET || 'production';
 
   try {
-    const query = '*[_type=="product"]{...,images[]->,category->}';
-    const baseUrl = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}`;
-    const url = `${baseUrl}?query=${encodeURIComponent(query)}`;
-
-    // Note: We bypass Vercel's /api/products function directly here to avoid caching issues.
-    // Making the cross-origin request directly to Sanity's global CDN is faster and avoids 500 errors.
-    const rawResponse = await fetch(url, {
-      cache: 'reload'
+    const rawResponse = await fetch(`/api/products?t=${Date.now()}`, {
+      cache: 'no-store'
     });
     
     if (!rawResponse.ok) {
-      throw new Error(`Failed to fetch from Sanity API: ${rawResponse.statusText}`);
+      throw new Error(`Failed to fetch from API: ${rawResponse.statusText}`);
     }
     
-    const json = await rawResponse.json();
-    const rawProducts = json.result || [];
+    const rawProducts = await rawResponse.json();
 
     if (!Array.isArray(rawProducts) || rawProducts.length === 0) {
       return fallbackProducts;

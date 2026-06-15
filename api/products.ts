@@ -5,9 +5,11 @@ export default async function handler(req: any, res: any) {
   try {
     const query = '*[_type=="product"]{...,images[]->,category->}';
     const baseUrl = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}`;
-    const url = `${baseUrl}?query=${encodeURIComponent(query)}`;
 
-    const rawResponse = await fetch(url, {
+    const rawResponse = await fetch(baseUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query }),
       cache: 'no-store'
     });
     
