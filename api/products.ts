@@ -3,7 +3,7 @@ export default async function handler(req: any, res: any) {
   const dataset = process.env.SANITY_DATASET || process.env.VITE_SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 
   try {
-    const query = '*[_type=="product"]{...,images[]->,category->}';
+    const query = '*[_type=="product"]';
     const baseUrl = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}`;
 
     const rawResponse = await fetch(baseUrl, {
