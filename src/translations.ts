@@ -12,7 +12,7 @@ export const translations: Record<Language, Record<string, any>> = {
       contact: "Aloqa"
     },
     common: {
-      copyright: "© KUKA HOME. Barcha huquqlar himoyalangan. FEELNET.KH tomonidan yaratilgan.",
+      copyright: "© KUKA HOME. Barcha huquqlar himoyalangan. FEELNET tomonidan yaratilgan.",
       back: "Orqaga",
       close: "Yopish",
       send: "Yuborish",
@@ -184,7 +184,7 @@ export const translations: Record<Language, Record<string, any>> = {
       contact: "Контактілер"
     },
     common: {
-      copyright: "© KUKA HOME. Барлық құқықтар қорғалған. FEELNET.KH әзірлеген.",
+      copyright: "© KUKA HOME. Барлық құқықтар қорғалған. FEELNET әзірлеген.",
       back: "Артқа",
       close: "Жабу",
       send: "Жіберу",
@@ -356,7 +356,7 @@ export const translations: Record<Language, Record<string, any>> = {
       contact: "Контакты"
     },
     common: {
-      copyright: "© KUKA HOME. Все права защищены. Создано FEELNET.KH.",
+      copyright: "© KUKA HOME. Все права защищены. Создано FEELNET.",
       back: "Назад",
       close: "Закрыть",
       send: "Отправить",
@@ -528,7 +528,7 @@ export const translations: Record<Language, Record<string, any>> = {
       contact: "Contact"
     },
     common: {
-      copyright: "© KUKA HOME. All rights reserved. Created by FEELNET.KH.",
+      copyright: "© KUKA HOME. All rights reserved. Created by FEELNET.",
       back: "Back",
       close: "Close",
       send: "Send",
@@ -700,7 +700,7 @@ export const translations: Record<Language, Record<string, any>> = {
       contact: "联系我们"
     },
     common: {
-      copyright: "© 顾家家居 (KUKA HOME). 版权所有。由 FEELNET.KH 创建。",
+      copyright: "© 顾家家居 (KUKA HOME). 版权所有。由 FEELNET 创建。",
       back: "返回",
       close: "关闭",
       send: "发送",

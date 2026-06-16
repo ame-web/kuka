@@ -1,9 +1,9 @@
 export default async function handler(req: any, res: any) {
-  const projectId = process.env.SANITY_PROJECT_ID || process.env.VITE_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'e6yjw47z';
-  const dataset = process.env.SANITY_DATASET || process.env.VITE_SANITY_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+  const projectId = 'e6yjw47z';
+  const dataset = 'production';
 
   try {
-    const query = '*[_type=="product"]';
+    const query = '*[_type=="product"]{...,images[]->,category->}';
     const baseUrl = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}`;
 
     const rawResponse = await fetch(baseUrl, {

@@ -2,8 +2,8 @@ import { Product } from './types';
 import { products as fallbackProducts } from './products';
 
 export async function getSanityProducts(): Promise<Product[]> {
-  const projectId = import.meta.env?.VITE_SANITY_PROJECT_ID || 'e6yjw47z';
-  const dataset = import.meta.env?.VITE_SANITY_DATASET || 'production';
+  const projectId = 'e6yjw47z';
+  const dataset = 'production';
 
   try {
     const rawResponse = await fetch(`/api/products?t=${Date.now()}`, {
